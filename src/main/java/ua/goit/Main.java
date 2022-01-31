@@ -1,14 +1,16 @@
 package ua.goit;
 
 import ua.goit.config.DatabaseManagerConnector;
+import ua.goit.config.PropertiesUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        DatabaseManagerConnector dbConnector = new DatabaseManagerConnector("localhost", 5432, "goit_practice",
-                "postgres", "12345");
+        PropertiesUtil util = new PropertiesUtil();
+        DatabaseManagerConnector dbConnector = new DatabaseManagerConnector(util.getHostname(), util.getPort(), util.getSchema(),
+                util.getUser(), util.getPassword());
         Connection connection = dbConnector.getConnection();
     }
 }
