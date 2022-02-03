@@ -1,27 +1,36 @@
 package ua.goit;
 
-import ua.goit.config.DatabaseManagerConnector;
+import ua.goit.config.DatabaseManager;
+import ua.goit.config.PostgresProvider;
 import ua.goit.config.PropertiesUtil;
 import ua.goit.dl.JobsRepository;
 import ua.goit.dl.Repository;
 import ua.goit.model.dao.JobsDao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         PropertiesUtil util = new PropertiesUtil();
-        DatabaseManagerConnector dbConnector = new DatabaseManagerConnector(util.getHostname(), util.getPort(), util.getSchema(),
+        DatabaseManager dbConnector = new PostgresProvider(util.getHostname(), util.getPort(), util.getSchema(),
                 util.getUser(), util.getPassword());
-        Connection connection = dbConnector.getConnection();
-        Repository<JobsDao> repository = new JobsRepository(connection);
+
+        Repository<JobsDao> repository = new JobsRepository(dbConnector);
 
         JobsDao acAccount = repository.findById("AC_ACCOUNT");
-
         System.out.println(acAccount.getJobId());
         System.out.println(acAccount.getJobTitle());
         System.out.println(acAccount.getMinSalary());
         System.out.println(acAccount.getMaxSalary());
+
+        JobsDao jobsDao = new JobsDao();
+        jobsDao.setJobId("NEW_JOB");
+        jobsDao.setJobTitle("NEW JOB TITLE UPDATED");
+        jobsDao.setMinSalary(1000);
+        jobsDao.setMaxSalary(5000);
+
+//        repository.save(jobsDao);
+//        repository.remove(jobsDao);
+        final int update = repository.update(jobsDao);
+        System.out.println("UPDATED columns count " + update);
+
     }
 }

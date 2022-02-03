@@ -8,5 +8,5 @@ public interface Repository<T> {
 
     void remove(T t);
 
-    T update(T t);
+    int update(T t);
 }
