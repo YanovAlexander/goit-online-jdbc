@@ -5,7 +5,10 @@ import ua.goit.config.PostgresHikariProvider;
 import ua.goit.config.PropertiesUtil;
 import ua.goit.dl.JobsRepository;
 import ua.goit.dl.Repository;
+import ua.goit.model.converter.JobsConverter;
 import ua.goit.model.dao.JobsDao;
+import ua.goit.model.dto.JobsDto;
+import ua.goit.service.JobsService;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,21 +19,25 @@ public class Main {
 
         Repository<JobsDao> repository = new JobsRepository(dbConnector);
 
-        JobsDao acAccount = repository.findById("AC_ACCOUNT");
+        JobsConverter converter = new JobsConverter();
+
+        JobsService service = new JobsService(converter, repository);
+
+        JobsDto acAccount = service.findById("AC_ACCOUNT");
         System.out.println(acAccount.getJobId());
         System.out.println(acAccount.getJobTitle());
         System.out.println(acAccount.getMinSalary());
         System.out.println(acAccount.getMaxSalary());
 
-        JobsDao jobsDao = new JobsDao();
-        jobsDao.setJobId("NEW_JOB");
-        jobsDao.setJobTitle("NEW JOB TITLE UPDATED");
-        jobsDao.setMinSalary(1000);
-        jobsDao.setMaxSalary(5000);
+        JobsDto dto = new JobsDto();
+        dto.setJobId("NEW_JOB");
+        dto.setJobTitle("NEW JOB TITLE UPDATED");
+        dto.setMinSalary(1000);
+        dto.setMaxSalary(5000);
 
-//        repository.save(jobsDao);
-//        repository.remove(jobsDao);
-        final int update = repository.update(jobsDao);
+//        service.save(dto);
+//        service.remove(dto);
+        final int update = service.update(dto);
         System.out.println("UPDATED columns count " + update);
 
     }
