@@ -1,8 +1,15 @@
 package ua.goit.dl;
 
+import ua.goit.model.dao.JobsDao;
+
+import java.util.List;
+import java.util.Optional;
+
 public interface Repository<T> {
 
-    T findById (String id);
+    Optional<T> findById (String id);
+
+    List<JobsDao> findAll();
 
     void save(T t);
 

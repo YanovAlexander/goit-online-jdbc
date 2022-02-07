@@ -5,7 +5,8 @@ import ua.goit.model.converter.JobsConverter;
 import ua.goit.model.dao.JobsDao;
 import ua.goit.model.dto.JobsDto;
 
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JobsService {
     private final JobsConverter converter;
@@ -17,14 +18,20 @@ public class JobsService {
     }
 
     public JobsDto findById(String id) {
-       return converter.convert(repository.findById(id));
+        return converter.convert(repository.findById(id).orElseThrow(() -> new IllegalArgumentException(String.format("User with id %s not found", id))));
+    }
+
+    public List<JobsDto> findAll() {
+        return repository.findAll().stream()
+                .map(converter::convert)
+                .collect(Collectors.toList());
     }
 
     public void save(JobsDto dto) {
-        JobsDao existJob = repository.findById(dto.getJobId());
-        if (Objects.nonNull(existJob)) {
-            throw new IllegalArgumentException(String.format("Job with id %s already exists", dto.getJobId()));
-        }
+        repository.findById(dto.getJobId())
+                .ifPresent(job -> {
+                    throw new IllegalArgumentException(String.format("Job with id %s already exists", job.getJobId()));
+                });
 
         repository.save(converter.convert(dto));
     }

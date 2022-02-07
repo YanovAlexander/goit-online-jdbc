@@ -29,16 +29,25 @@ public class Main {
         System.out.println(acAccount.getMinSalary());
         System.out.println(acAccount.getMaxSalary());
 
-        JobsDto dto = new JobsDto();
-        dto.setJobId("NEW_JOB");
-        dto.setJobTitle("NEW JOB TITLE UPDATED");
-        dto.setMinSalary(1000);
-        dto.setMaxSalary(5000);
-
+//        JobsDto dto = new JobsDto();
+//        dto.setJobId("NEW_JOBs");
+//        dto.setJobTitle("NEW JOB TITLE UPDATEDssss");
+//        dto.setMinSalary(1000);
+//        dto.setMaxSalary(5000);
+//
 //        service.save(dto);
 //        service.remove(dto);
-        final int update = service.update(dto);
-        System.out.println("UPDATED columns count " + update);
+//        final int update = service.update(dto);
+//        System.out.println("UPDATED columns count " + update);
 
+        service.findAll()
+                .forEach(job -> {
+                    System.out.println("--------------------");
+                    System.out.println(job.getJobId());
+                    System.out.println(job.getJobTitle());
+                    System.out.println(job.getMinSalary());
+                    System.out.println(job.getMaxSalary());
+                    System.out.println("--------------------");
+                });
     }
 }
